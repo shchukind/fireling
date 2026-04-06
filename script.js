@@ -1550,6 +1550,12 @@ function resize() {
   camera.updateProjectionMatrix();
 }
 
+function updateMobileViewportState() {
+  const mobileLandscape = window.innerWidth <= 980 && window.innerWidth > window.innerHeight;
+  document.body.classList.toggle("mobile-landscape", mobileLandscape);
+  document.body.classList.toggle("mobile-portrait", window.innerWidth <= 980 && window.innerHeight >= window.innerWidth);
+}
+
 function updateFullscreenButton() {
   fullscreenButton.textContent = document.fullscreenElement ? "Обычный экран" : "Полный экран";
 }
@@ -2244,10 +2250,24 @@ function render() {
   requestAnimationFrame(render);
 }
 
-window.addEventListener("resize", resize);
+window.addEventListener("resize", () => {
+  updateMobileViewportState();
+  resize();
+});
+window.addEventListener("orientationchange", () => {
+  updateMobileViewportState();
+  setTimeout(resize, 60);
+});
+if (window.visualViewport) {
+  window.visualViewport.addEventListener("resize", () => {
+    updateMobileViewportState();
+    resize();
+  });
+}
 document.addEventListener("fullscreenchange", () => {
   fullscreenHud.classList.toggle("active", document.fullscreenElement === viewportEl);
   updateFullscreenButton();
+  updateMobileViewportState();
   resize();
 });
 
@@ -2354,6 +2374,7 @@ if (restartFromGameOverButton) {
   restartFromGameOverButton.addEventListener("click", () => resetGame(true));
 }
 
+updateMobileViewportState();
 resize();
 fullscreenHud.classList.toggle("active", false);
 updateFullscreenButton();

@@ -819,11 +819,13 @@ button:active {
 }
 
 @media (max-width: 980px) and (orientation: portrait) {
-  .rotate-screen {
+  .rotate-screen,
+  body.mobile-portrait .rotate-screen {
     display: flex;
   }
 
-  .mobile-controls {
+  .mobile-controls,
+  body.mobile-portrait .mobile-controls {
     display: none;
   }
 }
@@ -836,38 +838,49 @@ button:active {
   html,
   body {
     width: 100%;
-    height: 100dvh;
+    min-height: 100svh;
     overflow: hidden;
   }
 
   .shell {
     width: 100vw;
-    height: 100dvh;
-    min-height: 100dvh;
+    min-height: 100svh;
     padding: 0;
   }
 
   .layout {
-    position: fixed;
-    inset: 0;
     display: block;
     width: 100vw;
-    height: 100dvh;
+    min-height: 100svh;
   }
 
   .viewport,
   #game {
     width: 100vw;
-    height: 100dvh;
-    min-height: 100dvh;
+    min-height: 100svh;
   }
 
   .viewport {
-    position: fixed;
-    inset: 0;
+    position: relative;
   }
 
   .mobile-controls {
     display: flex;
   }
+}
+
+body.mobile-landscape .rotate-screen {
+  display: none;
+}
+
+body.mobile-landscape .mobile-controls {
+  display: flex;
+}
+
+body.mobile-landscape,
+body.mobile-landscape .shell,
+body.mobile-landscape .layout,
+body.mobile-landscape .viewport,
+body.mobile-landscape #game {
+  min-height: 100svh;
 }
