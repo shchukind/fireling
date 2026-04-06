@@ -22,6 +22,7 @@ const restartFromGameOverButton = document.getElementById("restart-from-game-ove
 const mobileKeyButtons = Array.from(document.querySelectorAll(".mobile-action"));
 const mobileJoystickEl = document.getElementById("mobile-joystick");
 const mobileJoystickThumbEl = document.getElementById("mobile-joystick-thumb");
+let activeJoystickPointerId = null;
 
 const fullscreenButton = document.createElement("button");
 fullscreenButton.id = "fullscreen";
@@ -1519,6 +1520,7 @@ function resetGame(startImmediately = false) {
   } else {
     showStartScreen();
   }
+  updateUiStateClasses();
   updateHud();
 }
 
@@ -1546,6 +1548,7 @@ function endGame() {
   if (gameOverEl) {
     gameOverEl.classList.remove("hidden");
   }
+  updateUiStateClasses();
   setStatus(`РћРіРѕРЅСЊ РїРѕРіР°СЃ С‡РµСЂРµР· ${state.survival.toFixed(1)}СЃ. РќР°Р¶РјРё R РёР»Рё РєРЅРѕРїРєСѓ СЃРїСЂР°РІР°, С‡С‚РѕР±С‹ РїРѕРїСЂРѕР±РѕРІР°С‚СЊ РµС‰Рµ СЂР°Р·.`);
   updateHud();
 }
@@ -1575,6 +1578,11 @@ function updateMobileViewportState() {
   document.body.classList.toggle("mobile-portrait", window.innerWidth <= 980 && window.innerHeight >= window.innerWidth);
 }
 
+function updateUiStateClasses() {
+  document.body.classList.toggle("start-active", !state.started && !state.gameOver);
+  document.body.classList.toggle("game-over-active", state.gameOver);
+}
+
 function updateFullscreenButton() {
   fullscreenButton.textContent = document.fullscreenElement ? "Обычный экран" : "Полный экран";
 }
@@ -1601,6 +1609,7 @@ function showStartScreen() {
   if (startScreenEl) {
     startScreenEl.classList.remove("hidden");
   }
+  updateUiStateClasses();
 }
 
 function beginGame() {
@@ -1611,6 +1620,7 @@ function beginGame() {
   if (startScreenEl) {
     startScreenEl.classList.add("hidden");
   }
+  updateUiStateClasses();
 }
 
 function setVirtualKey(code, pressed) {
@@ -2322,21 +2332,41 @@ document.addEventListener("keyup", (event) => {
 function updateMobileJoystick(dx = 0, dy = 0) {
   mobileMoveInput.set(dx, dy);
   if (mobileJoystickThumbEl) {
-    mobileJoystickThumbEl.style.transform = `translate(calc(-50% + ${dx * 28}px), calc(-50% + ${-dy * 28}px))`;
+    const thumbTravel = mobileJoystickEl ? mobileJoystickEl.clientWidth * 0.23 : 22;
+    mobileJoystickThumbEl.style.transform = `translate(calc(-50% + ${dx * thumbTravel}px), calc(-50% + ${-dy * thumbTravel}px))`;
   }
 }
 
 if (mobileJoystickEl) {
-  const releaseJoystick = () => updateMobileJoystick(0, 0);
+  const releaseJoystick = (event) => {
+    if (event && activeJoystickPointerId !== null && event.pointerId !== activeJoystickPointerId) {
+      return;
+    }
+    activeJoystickPointerId = null;
+    updateMobileJoystick(0, 0);
+  };
 
   mobileJoystickEl.addEventListener("pointerdown", (event) => {
     event.preventDefault();
     resumeAudio();
+    activeJoystickPointerId = event.pointerId;
     mobileJoystickEl.setPointerCapture(event.pointerId);
+    const rect = mobileJoystickEl.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const radius = rect.width * 0.34;
+    let dx = (event.clientX - centerX) / radius;
+    let dy = (event.clientY - centerY) / radius;
+    const length = Math.hypot(dx, dy);
+    if (length > 1) {
+      dx /= length;
+      dy /= length;
+    }
+    updateMobileJoystick(dx, -dy);
   });
 
   mobileJoystickEl.addEventListener("pointermove", (event) => {
-    if (!(event.buttons & 1)) {
+    if (activeJoystickPointerId === null || event.pointerId !== activeJoystickPointerId) {
       return;
     }
     const rect = mobileJoystickEl.getBoundingClientRect();
@@ -2404,6 +2434,7 @@ if (typeof standaloneMediaQuery.addEventListener === "function") {
 window.addEventListener("appinstalled", updateStandaloneState);
 registerServiceWorker();
 updateMobileViewportState();
+updateUiStateClasses();
 resize();
 fullscreenHud.classList.toggle("active", false);
 updateFullscreenButton();

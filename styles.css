@@ -642,9 +642,9 @@ button:active {
 
   .bottom-left,
   .bottom-right {
-    bottom: 110px;
-    min-width: 110px;
-    padding: 10px 12px;
+    bottom: calc(126px + env(safe-area-inset-bottom, 0px));
+    min-width: 102px;
+    padding: 9px 10px;
   }
 
   .bottom-left {
@@ -658,12 +658,12 @@ button:active {
   .mobile-controls {
     position: absolute;
     inset-inline: 0;
-    bottom: 10px;
+    bottom: calc(8px + env(safe-area-inset-bottom, 0px));
     z-index: 8;
     display: flex;
     align-items: end;
     justify-content: space-between;
-    padding: 0 10px;
+    padding: 0 max(10px, env(safe-area-inset-left, 0px)) 0 max(10px, env(safe-area-inset-right, 0px));
     pointer-events: none;
   }
 
@@ -674,9 +674,10 @@ button:active {
 
   .mobile-joystick {
     position: relative;
-    width: 120px;
-    height: 120px;
+    width: 96px;
+    height: 96px;
     display: block;
+    touch-action: none;
   }
 
   .mobile-joystick-ring,
@@ -689,8 +690,8 @@ button:active {
   }
 
   .mobile-joystick-ring {
-    width: 120px;
-    height: 120px;
+    width: 96px;
+    height: 96px;
     background: rgba(10, 16, 22, 0.34);
     border: 1px solid rgba(255, 215, 142, 0.14);
     box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.22);
@@ -698,8 +699,8 @@ button:active {
   }
 
   .mobile-joystick-thumb {
-    width: 52px;
-    height: 52px;
+    width: 40px;
+    height: 40px;
     background: rgba(255, 196, 112, 0.2);
     border: 1px solid rgba(255, 215, 142, 0.22);
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
@@ -708,7 +709,7 @@ button:active {
 
   .mobile-actions {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     align-items: center;
   }
 
@@ -736,8 +737,8 @@ button:active {
 
   .mobile-action {
     position: static;
-    width: 52px;
-    height: 52px;
+    width: 46px;
+    height: 46px;
     border-radius: 999px;
     font-size: 1.05rem;
   }
@@ -750,6 +751,25 @@ button:active {
   .mobile-action-jump {
     background: rgba(255, 184, 101, 0.22);
     border-color: rgba(255, 215, 142, 0.24);
+  }
+
+  body.mobile-landscape .overlay {
+    background: rgba(7, 12, 18, 0.62);
+    border-color: rgba(255, 215, 142, 0.14);
+  }
+
+  body.mobile-landscape.start-active .mobile-controls,
+  body.mobile-landscape.game-over-active .mobile-controls,
+  body.mobile-landscape.start-active .top-left,
+  body.mobile-landscape.start-active .top-right,
+  body.mobile-landscape.game-over-active .top-left,
+  body.mobile-landscape.game-over-active .top-right,
+  body.mobile-landscape.start-active .bottom-left,
+  body.mobile-landscape.start-active .bottom-right,
+  body.mobile-landscape.game-over-active .bottom-left,
+  body.mobile-landscape.game-over-active .bottom-right {
+    opacity: 0;
+    pointer-events: none;
   }
 
   .start-screen,
@@ -774,8 +794,8 @@ button:active {
 
   .bottom-left,
   .bottom-right {
-    bottom: 102px;
-    min-width: 96px;
+    bottom: calc(116px + env(safe-area-inset-bottom, 0px));
+    min-width: 90px;
   }
 
   .mobile-controls {
@@ -783,18 +803,18 @@ button:active {
   }
 
   .mobile-joystick {
-    width: 108px;
-    height: 108px;
+    width: 88px;
+    height: 88px;
   }
 
   .mobile-joystick-ring {
-    width: 108px;
-    height: 108px;
+    width: 88px;
+    height: 88px;
   }
 
   .mobile-joystick-thumb {
-    width: 46px;
-    height: 46px;
+    width: 36px;
+    height: 36px;
   }
 
   .mobile-key {
@@ -805,8 +825,8 @@ button:active {
   }
 
   .mobile-action {
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
   }
 
   .start-card h2 {
