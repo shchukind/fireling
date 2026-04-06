@@ -248,6 +248,51 @@ h1 {
   line-height: 1.55;
 }
 
+.install-panel {
+  margin: 0 auto 18px;
+  max-width: 420px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 215, 142, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  text-align: left;
+}
+
+.install-panel.hidden {
+  display: none;
+}
+
+.install-kicker {
+  color: #fff1d7;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.install-copy {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.install-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.install-hint {
+  margin-top: 10px;
+  color: rgba(248, 234, 210, 0.68);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.install-hint.hidden,
+.install-actions .hidden {
+  display: none;
+}
+
 .start-hint {
   margin-top: 14px;
   color: rgba(248, 234, 210, 0.68);
@@ -517,6 +562,14 @@ h1 {
   display: none;
 }
 
+body.start-active .overlay,
+body.start-active .mobile-controls,
+body.start-active .fullscreen-hud,
+body.start-active .sidebar {
+  opacity: 0;
+  pointer-events: none;
+}
+
 .sidebar > section:last-child h2 {
   display: none;
 }
@@ -673,9 +726,9 @@ button:active {
   .mobile-joystick {
     position: absolute;
     left: max(18px, env(safe-area-inset-left, 0px));
-    bottom: calc(48px + env(safe-area-inset-bottom, 0px));
-    width: 116px;
-    height: 116px;
+    bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+    width: 126px;
+    height: 126px;
     display: block;
     touch-action: none;
   }
@@ -690,8 +743,8 @@ button:active {
   }
 
   .mobile-joystick-ring {
-    width: 116px;
-    height: 116px;
+    width: 126px;
+    height: 126px;
     background: rgba(10, 16, 22, 0.34);
     border: 1px solid rgba(255, 215, 142, 0.14);
     box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.22);
@@ -699,8 +752,8 @@ button:active {
   }
 
   .mobile-joystick-thumb {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     background: rgba(255, 196, 112, 0.2);
     border: 1px solid rgba(255, 215, 142, 0.22);
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
@@ -710,7 +763,7 @@ button:active {
   .mobile-actions {
     position: absolute;
     right: max(18px, env(safe-area-inset-right, 0px));
-    bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(60px + env(safe-area-inset-bottom, 0px));
     display: flex;
     flex-direction: row;
     gap: 14px;
@@ -741,10 +794,10 @@ button:active {
 
   .mobile-action {
     position: static;
-    width: 64px;
-    height: 64px;
+    width: 70px;
+    height: 70px;
     border-radius: 999px;
-    font-size: 1.28rem;
+    font-size: 1.34rem;
   }
 
   .mobile-action-dash {
@@ -809,19 +862,19 @@ button:active {
 
   .mobile-joystick {
     left: max(14px, env(safe-area-inset-left, 0px));
-    bottom: calc(40px + env(safe-area-inset-bottom, 0px));
-    width: 102px;
-    height: 102px;
+    bottom: calc(50px + env(safe-area-inset-bottom, 0px));
+    width: 112px;
+    height: 112px;
   }
 
   .mobile-joystick-ring {
-    width: 102px;
-    height: 102px;
+    width: 112px;
+    height: 112px;
   }
 
   .mobile-joystick-thumb {
-    width: 42px;
-    height: 42px;
+    width: 46px;
+    height: 46px;
   }
 
   .mobile-key {
@@ -832,8 +885,8 @@ button:active {
   }
 
   .mobile-action {
-    width: 56px;
-    height: 56px;
+    width: 62px;
+    height: 62px;
   }
 
   .start-card h2 {

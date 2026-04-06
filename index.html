@@ -20,12 +20,14 @@
       <section class="layout">
         <div class="viewport frame">
           <div id="game" aria-label="3D игра с костром"></div>
+
           <div id="rotate-screen" class="rotate-screen" aria-live="polite">
             <div class="rotate-card">
               <p class="rotate-kicker">Мобильный режим</p>
               <p class="rotate-copy">Поверни экран горизонтально</p>
             </div>
           </div>
+
           <div id="start-screen" class="start-screen" aria-live="polite">
             <div class="start-card">
               <p class="start-kicker">Ночная лужайка</p>
@@ -33,9 +35,18 @@
               <p class="start-copy">
                 Ты живой костёр. Собирай поленья, борись с непогодой и не дай огню погаснуть.
               </p>
+              <div id="install-panel" class="install-panel hidden">
+                <p id="install-kicker" class="install-kicker">Установить приложение</p>
+                <p id="install-copy" class="install-copy"></p>
+                <div class="install-actions">
+                  <button id="install-app" type="button" class="button-secondary hidden">Установить</button>
+                </div>
+                <p id="install-hint" class="install-hint hidden"></p>
+              </div>
               <button id="start-game" type="button" class="button-primary">Начать игру</button>
             </div>
           </div>
+
           <div id="game-over" class="game-over hidden" aria-live="polite">
             <p class="game-over-kicker">Ночь закончилась</p>
             <h2 id="game-over-title">Ваш костёр погас</h2>
@@ -96,12 +107,10 @@
           <section class="frame panel panel-compact">
             <h2>Правила</h2>
             <p>
-              Огонь постепенно угасает. Каждое полено продлевает жизнь костра и помогает пережить
-              ночь.
+              Огонь постепенно угасает. Каждое полено продлевает жизнь костра и помогает пережить ночь.
             </p>
             <p>
-              Во время дождя пламя гаснет быстрее. Лужи замедляют, коряги и деревья мешают пройти,
-              так что маршрут приходится выбирать аккуратно.
+              Во время дождя пламя гаснет быстрее. Лужи замедляют, коряги и деревья мешают пройти, так что маршрут приходится выбирать аккуратно.
             </p>
           </section>
 

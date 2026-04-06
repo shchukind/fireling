@@ -14,15 +14,19 @@ const statusEl = document.getElementById("status");
 const restartButton = document.getElementById("restart");
 const startScreenEl = document.getElementById("start-screen");
 const startGameButton = document.getElementById("start-game");
-const rotateScreenEl = document.getElementById("rotate-screen");
 const gameOverEl = document.getElementById("game-over");
 const gameOverTextEl = document.getElementById("game-over-text");
 const newRecordEl = document.getElementById("new-record");
 const restartFromGameOverButton = document.getElementById("restart-from-game-over");
+const installPanelEl = document.getElementById("install-panel");
+const installCopyEl = document.getElementById("install-copy");
+const installButtonEl = document.getElementById("install-app");
+const installHintEl = document.getElementById("install-hint");
 const mobileKeyButtons = Array.from(document.querySelectorAll(".mobile-action"));
 const mobileJoystickEl = document.getElementById("mobile-joystick");
 const mobileJoystickThumbEl = document.getElementById("mobile-joystick-thumb");
 let activeJoystickPointerId = null;
+let deferredInstallPrompt = null;
 
 const fullscreenButton = document.createElement("button");
 fullscreenButton.id = "fullscreen";
@@ -95,6 +99,54 @@ function updateStandaloneState() {
     window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone === true;
   document.body.classList.toggle("standalone-app", standalone);
+  updateInstallUi();
+}
+
+function isLikelyMobileDevice() {
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.innerWidth <= 980;
+}
+
+function isIosSafariLike() {
+  const ua = navigator.userAgent;
+  const isIos = /iPhone|iPad|iPod/i.test(ua);
+  const isWebKit = /WebKit/i.test(ua);
+  const isOtherBrowser = /CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
+  return isIos && isWebKit && !isOtherBrowser;
+}
+
+function updateInstallUi() {
+  if (!installPanelEl || !installCopyEl || !installButtonEl || !installHintEl) {
+    return;
+  }
+
+  const standalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+  const isMobile = isLikelyMobileDevice();
+  const showAndroidInstall = isMobile && !standalone && deferredInstallPrompt;
+  const showIosInstall = isMobile && !standalone && isIosSafariLike();
+  const shouldShowPanel = showAndroidInstall || showIosInstall;
+
+  installPanelEl.classList.toggle("hidden", !shouldShowPanel);
+  installButtonEl.classList.toggle("hidden", !showAndroidInstall);
+  installHintEl.classList.add("hidden");
+
+  if (showAndroidInstall) {
+    installCopyEl.textContent = "Установи Fireling как приложение, чтобы играть без лишнего интерфейса браузера и с более аккуратным мобильным экраном.";
+    installHintEl.textContent = "После установки запускай игру с иконки на главном экране.";
+    installHintEl.classList.remove("hidden");
+  } else if (showIosInstall) {
+    installCopyEl.textContent = 'На iPhone установка идёт через Safari: нажми "Поделиться", затем выбери "На экран Домой".';
+    installHintEl.textContent = "После этого Fireling будет запускаться с иконки как отдельное веб-приложение.";
+    installHintEl.classList.remove("hidden");
+  } else {
+    installCopyEl.textContent = "";
+    installHintEl.textContent = "";
+  }
+
+  if (startGameButton) {
+    startGameButton.textContent = shouldShowPanel ? "Играть в браузере" : "Начать игру";
+  }
 }
 
 async function registerServiceWorker() {
@@ -1576,6 +1628,7 @@ function updateMobileViewportState() {
   const mobileLandscape = window.innerWidth <= 980 && window.innerWidth > window.innerHeight;
   document.body.classList.toggle("mobile-landscape", mobileLandscape);
   document.body.classList.toggle("mobile-portrait", window.innerWidth <= 980 && window.innerHeight >= window.innerWidth);
+  updateInstallUi();
 }
 
 function updateUiStateClasses() {
@@ -2300,6 +2353,12 @@ document.addEventListener("fullscreenchange", () => {
   resize();
 });
 
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  updateInstallUi();
+});
+
 document.addEventListener("keydown", (event) => {
   if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(event.code)) {
     event.preventDefault();
@@ -2419,6 +2478,22 @@ fullscreenButton.addEventListener("click", toggleFullscreen);
 if (startGameButton) {
   startGameButton.addEventListener("click", beginGame);
 }
+if (installButtonEl) {
+  installButtonEl.addEventListener("click", async () => {
+    if (!deferredInstallPrompt) {
+      return;
+    }
+    const promptEvent = deferredInstallPrompt;
+    deferredInstallPrompt = null;
+    promptEvent.prompt();
+    try {
+      await promptEvent.userChoice;
+    } catch (error) {
+      console.warn("Install prompt failed:", error);
+    }
+    updateInstallUi();
+  });
+}
 if (restartFromGameOverButton) {
   restartFromGameOverButton.addEventListener("click", () => resetGame(true));
 }
@@ -2431,10 +2506,15 @@ if (typeof standaloneMediaQuery.addEventListener === "function") {
 } else if (typeof standaloneMediaQuery.addListener === "function") {
   standaloneMediaQuery.addListener(updateStandaloneState);
 }
-window.addEventListener("appinstalled", updateStandaloneState);
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  updateStandaloneState();
+  updateInstallUi();
+});
 registerServiceWorker();
 updateMobileViewportState();
 updateUiStateClasses();
+updateInstallUi();
 resize();
 fullscreenHud.classList.toggle("active", false);
 updateFullscreenButton();
