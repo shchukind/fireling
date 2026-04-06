@@ -606,10 +606,22 @@ button {
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 10px 22px rgba(255, 136, 52, 0.25);
+  transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease, opacity 160ms ease;
 }
 
 button:hover {
   filter: brightness(1.05);
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.62;
+  filter: saturate(0.72) brightness(0.92);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.16);
+}
+
+button:disabled:hover {
+  filter: saturate(0.72) brightness(0.92);
 }
 
 button:active {
