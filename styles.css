@@ -627,14 +627,14 @@ button:active {
   }
 
   .top-left {
-    top: 10px;
+    top: calc(10px + env(safe-area-inset-top, 0px));
     left: 10px;
     min-width: 156px;
     padding: 10px 12px;
   }
 
   .top-right {
-    top: 10px;
+    top: calc(10px + env(safe-area-inset-top, 0px));
     right: 10px;
     min-width: 138px;
     padding: 10px 12px;
@@ -642,7 +642,8 @@ button:active {
 
   .bottom-left,
   .bottom-right {
-    bottom: calc(126px + env(safe-area-inset-bottom, 0px));
+    top: calc(90px + env(safe-area-inset-top, 0px));
+    bottom: auto;
     min-width: 102px;
     padding: 9px 10px;
   }
@@ -794,7 +795,8 @@ button:active {
 
   .bottom-left,
   .bottom-right {
-    bottom: calc(116px + env(safe-area-inset-bottom, 0px));
+    top: calc(84px + env(safe-area-inset-top, 0px));
+    bottom: auto;
     min-width: 90px;
   }
 
@@ -841,7 +843,7 @@ button:active {
 @media (max-width: 980px) and (orientation: portrait) {
   .rotate-screen,
   body.mobile-portrait .rotate-screen {
-    display: flex;
+    display: none;
   }
 
   .mobile-controls,
