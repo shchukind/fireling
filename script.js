@@ -19,7 +19,9 @@ const gameOverEl = document.getElementById("game-over");
 const gameOverTextEl = document.getElementById("game-over-text");
 const newRecordEl = document.getElementById("new-record");
 const restartFromGameOverButton = document.getElementById("restart-from-game-over");
-const mobileKeyButtons = Array.from(document.querySelectorAll(".mobile-key"));
+const mobileKeyButtons = Array.from(document.querySelectorAll(".mobile-action"));
+const mobileJoystickEl = document.getElementById("mobile-joystick");
+const mobileJoystickThumbEl = document.getElementById("mobile-joystick-thumb");
 
 const fullscreenButton = document.createElement("button");
 fullscreenButton.id = "fullscreen";
@@ -67,6 +69,7 @@ const burstScale = new THREE.Vector3();
 const windDirectionVector = new THREE.Vector3(1, 0, 0);
 const windSideVector = new THREE.Vector3();
 const windOffsetVector = new THREE.Vector3();
+const mobileMoveInput = new THREE.Vector2();
 const bestSurvivalStorageKey = "fireling-best-survival";
 const storedBestSurvival = Number(window.localStorage.getItem(bestSurvivalStorageKey) || 0);
 const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -1600,8 +1603,10 @@ function setVirtualKey(code, pressed) {
 }
 
 function readInput() {
-  const x = Number(keys.has("KeyD") || keys.has("ArrowRight")) - Number(keys.has("KeyA") || keys.has("ArrowLeft"));
-  const z = Number(keys.has("KeyW") || keys.has("ArrowUp")) - Number(keys.has("KeyS") || keys.has("ArrowDown"));
+  const keyX = Number(keys.has("KeyD") || keys.has("ArrowRight")) - Number(keys.has("KeyA") || keys.has("ArrowLeft"));
+  const keyZ = Number(keys.has("KeyW") || keys.has("ArrowUp")) - Number(keys.has("KeyS") || keys.has("ArrowDown"));
+  const x = keyX !== 0 ? keyX : mobileMoveInput.x;
+  const z = keyZ !== 0 ? keyZ : mobileMoveInput.y;
 
   camera.getWorldDirection(cameraForward);
   cameraForward.y = 0;
@@ -2274,6 +2279,45 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("keyup", (event) => {
   keys.delete(event.code);
 });
+
+function updateMobileJoystick(dx = 0, dy = 0) {
+  mobileMoveInput.set(dx, dy);
+  if (mobileJoystickThumbEl) {
+    mobileJoystickThumbEl.style.transform = `translate(calc(-50% + ${dx * 28}px), calc(-50% + ${-dy * 28}px))`;
+  }
+}
+
+if (mobileJoystickEl) {
+  const releaseJoystick = () => updateMobileJoystick(0, 0);
+
+  mobileJoystickEl.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    resumeAudio();
+    mobileJoystickEl.setPointerCapture(event.pointerId);
+  });
+
+  mobileJoystickEl.addEventListener("pointermove", (event) => {
+    if (!(event.buttons & 1)) {
+      return;
+    }
+    const rect = mobileJoystickEl.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const radius = rect.width * 0.34;
+    let dx = (event.clientX - centerX) / radius;
+    let dy = (event.clientY - centerY) / radius;
+    const length = Math.hypot(dx, dy);
+    if (length > 1) {
+      dx /= length;
+      dy /= length;
+    }
+    updateMobileJoystick(dx, -dy);
+  });
+
+  mobileJoystickEl.addEventListener("pointerup", releaseJoystick);
+  mobileJoystickEl.addEventListener("pointercancel", releaseJoystick);
+  mobileJoystickEl.addEventListener("lostpointercapture", releaseJoystick);
+}
 
 mobileKeyButtons.forEach((button) => {
   const code = button.dataset.key;

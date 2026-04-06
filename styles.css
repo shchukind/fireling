@@ -362,6 +362,10 @@ h1 {
   display: none;
 }
 
+.mobile-joystick {
+  display: none;
+}
+
 .meter-secondary {
   opacity: 0.72;
 }
@@ -663,15 +667,43 @@ button:active {
     pointer-events: none;
   }
 
-  .mobile-dpad,
+  .mobile-joystick,
   .mobile-actions {
     pointer-events: auto;
   }
 
-  .mobile-dpad {
+  .mobile-joystick {
     position: relative;
-    width: 132px;
-    height: 104px;
+    width: 120px;
+    height: 120px;
+    display: block;
+  }
+
+  .mobile-joystick-ring,
+  .mobile-joystick-thumb {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 999px;
+  }
+
+  .mobile-joystick-ring {
+    width: 120px;
+    height: 120px;
+    background: rgba(10, 16, 22, 0.34);
+    border: 1px solid rgba(255, 215, 142, 0.14);
+    box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(8px);
+  }
+
+  .mobile-joystick-thumb {
+    width: 52px;
+    height: 52px;
+    background: rgba(255, 196, 112, 0.2);
+    border: 1px solid rgba(255, 215, 142, 0.22);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+    transition: transform 90ms ease;
   }
 
   .mobile-actions {
@@ -700,26 +732,6 @@ button:active {
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
     touch-action: none;
-  }
-
-  .mobile-key-up {
-    left: 44px;
-    top: 0;
-  }
-
-  .mobile-key-left {
-    left: 0;
-    top: 30px;
-  }
-
-  .mobile-key-right {
-    right: 0;
-    top: 30px;
-  }
-
-  .mobile-key-down {
-    left: 44px;
-    bottom: 0;
   }
 
   .mobile-action {
@@ -770,9 +782,19 @@ button:active {
     padding-inline: 8px;
   }
 
-  .mobile-dpad {
-    width: 120px;
-    height: 96px;
+  .mobile-joystick {
+    width: 108px;
+    height: 108px;
+  }
+
+  .mobile-joystick-ring {
+    width: 108px;
+    height: 108px;
+  }
+
+  .mobile-joystick-thumb {
+    width: 46px;
+    height: 46px;
   }
 
   .mobile-key {
@@ -780,16 +802,6 @@ button:active {
     height: 40px;
     border-radius: 15px;
     font-size: 1.05rem;
-  }
-
-  .mobile-key-up,
-  .mobile-key-down {
-    left: 40px;
-  }
-
-  .mobile-key-left,
-  .mobile-key-right {
-    top: 28px;
   }
 
   .mobile-action {
@@ -819,5 +831,10 @@ button:active {
 @media (max-width: 980px) and (orientation: landscape) {
   .rotate-screen {
     display: none;
+  }
+
+  html,
+  body {
+    overflow: hidden;
   }
 }
