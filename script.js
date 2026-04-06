@@ -89,6 +89,25 @@ const audio = {
   ready: false,
 };
 
+function updateStandaloneState() {
+  const standalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+  document.body.classList.toggle("standalone-app", standalone);
+}
+
+async function registerServiceWorker() {
+  if (!("serviceWorker" in navigator) || location.protocol === "file:") {
+    return;
+  }
+
+  try {
+    await navigator.serviceWorker.register("./service-worker.js");
+  } catch (error) {
+    console.warn("Service worker registration failed:", error);
+  }
+}
+
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x1f3c5d);
 scene.fog = new THREE.FogExp2(0x22405f, 0.0072);
@@ -2374,6 +2393,16 @@ if (restartFromGameOverButton) {
   restartFromGameOverButton.addEventListener("click", () => resetGame(true));
 }
 
+const standaloneMediaQuery = window.matchMedia("(display-mode: standalone)");
+
+updateStandaloneState();
+if (typeof standaloneMediaQuery.addEventListener === "function") {
+  standaloneMediaQuery.addEventListener("change", updateStandaloneState);
+} else if (typeof standaloneMediaQuery.addListener === "function") {
+  standaloneMediaQuery.addListener(updateStandaloneState);
+}
+window.addEventListener("appinstalled", updateStandaloneState);
+registerServiceWorker();
 updateMobileViewportState();
 resize();
 fullscreenHud.classList.toggle("active", false);

@@ -1,0 +1,19 @@
+{
+  "name": "Fireling",
+  "short_name": "Fireling",
+  "description": "Ты живой костер. Собирай поленья, борись с непогодой и не дай огню погаснуть.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#09111a",
+  "theme_color": "#13263d",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
