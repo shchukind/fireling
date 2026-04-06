@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fireling</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="layout">
+        <div class="viewport frame">
+          <div id="game" aria-label="3D игра с костром"></div>
+          <div id="rotate-screen" class="rotate-screen" aria-live="polite">
+            <div class="rotate-card">
+              <p class="rotate-kicker">Мобильный режим</p>
+              <p class="rotate-copy">Поверни экран горизонтально</p>
+            </div>
+          </div>
+          <div id="start-screen" class="start-screen" aria-live="polite">
+            <div class="start-card">
+              <p class="start-kicker">Ночная лужайка</p>
+              <h2>Fireling</h2>
+              <p class="start-copy">
+                Ты живой костёр. Собирай поленья, борись с непогодой и не дай огню погаснуть.
+              </p>
+              <button id="start-game" type="button" class="button-primary">Начать игру</button>
+            </div>
+          </div>
+          <div id="game-over" class="game-over hidden" aria-live="polite">
+            <p class="game-over-kicker">Ночь закончилась</p>
+            <h2 id="game-over-title">Ваш костёр погас</h2>
+            <p id="game-over-text">Он горел 0.0с</p>
+            <p id="new-record" class="record-badge hidden">Новый рекорд</p>
+            <button id="restart-from-game-over" type="button" class="button-primary">Начать заново</button>
+          </div>
+
+          <div class="overlay top-left">
+            <span class="label">Огонь</span>
+            <div class="meter">
+              <div id="heat-fill" class="meter-fill"></div>
+            </div>
+            <span id="dash-label-top" class="overlay-note">Рывок</span>
+            <div class="meter meter-small meter-secondary">
+              <div id="dash-fill-top" class="meter-fill meter-fill-cool"></div>
+            </div>
+          </div>
+
+          <div class="overlay top-right">
+            <span class="label">Осталось до угасания</span>
+            <strong id="heat-seconds">30.0с</strong>
+            <span id="hazard-note" class="overlay-note">Лес тихий</span>
+          </div>
+
+          <div class="overlay bottom-left">
+            <span class="label">Собрано дров</span>
+            <strong id="wood-count">0</strong>
+          </div>
+
+          <div class="overlay bottom-right">
+            <span class="label">Прожито</span>
+            <strong id="survival-time">0.0с</strong>
+            <span id="best-time" class="overlay-note">Рекорд: 0.0с</span>
+          </div>
+
+          <div class="mobile-controls" aria-hidden="true">
+            <div class="mobile-dpad">
+              <button class="mobile-key mobile-key-up" data-key="ArrowUp" type="button">↑</button>
+              <button class="mobile-key mobile-key-left" data-key="ArrowLeft" type="button">←</button>
+              <button class="mobile-key mobile-key-right" data-key="ArrowRight" type="button">→</button>
+              <button class="mobile-key mobile-key-down" data-key="ArrowDown" type="button">↓</button>
+            </div>
+            <div class="mobile-actions">
+              <button class="mobile-key mobile-action mobile-action-dash" data-key="ShiftLeft" type="button">◆</button>
+              <button class="mobile-key mobile-action mobile-action-jump" data-key="Space" type="button">▲</button>
+            </div>
+          </div>
+        </div>
+
+        <aside class="sidebar">
+          <section class="frame panel panel-compact">
+            <h2>Как играть</h2>
+            <p><kbd>← ↑ ↓ →</kbd> для движения</p>
+            <p><kbd>Shift</kbd> для рывка</p>
+            <p><kbd>Space</kbd> для прыжка</p>
+            <p><kbd>R</kbd> для рестарта</p>
+          </section>
+
+          <section class="frame panel panel-compact">
+            <h2>Правила</h2>
+            <p>
+              Огонь постепенно угасает. Каждое полено продлевает жизнь костра и помогает пережить
+              ночь.
+            </p>
+            <p>
+              Во время дождя пламя гаснет быстрее. Лужи замедляют, коряги и деревья мешают пройти,
+              так что маршрут приходится выбирать аккуратно.
+            </p>
+          </section>
+
+          <section class="frame panel">
+            <h2>Статус</h2>
+            <p id="status" class="status-hidden" aria-hidden="true">
+              Пламя ожило. Собери первое полено прежде, чем тьма успеет его задушить.
+            </p>
+            <button id="restart" type="button">Начать заново</button>
+          </section>
+        </aside>
+      </section>
+    </main>
+
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>
