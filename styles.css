@@ -658,13 +658,10 @@ button:active {
 
   .mobile-controls {
     position: absolute;
-    inset-inline: 0;
-    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    inset: 0;
     z-index: 8;
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    padding: 0 max(18px, env(safe-area-inset-left, 0px)) 0 max(18px, env(safe-area-inset-right, 0px));
+    display: block;
+    padding: 0;
     pointer-events: none;
   }
 
@@ -674,9 +671,11 @@ button:active {
   }
 
   .mobile-joystick {
-    position: relative;
-    width: 124px;
-    height: 124px;
+    position: absolute;
+    left: max(18px, env(safe-area-inset-left, 0px));
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    width: 108px;
+    height: 108px;
     display: block;
     touch-action: none;
   }
@@ -691,8 +690,8 @@ button:active {
   }
 
   .mobile-joystick-ring {
-    width: 124px;
-    height: 124px;
+    width: 108px;
+    height: 108px;
     background: rgba(10, 16, 22, 0.34);
     border: 1px solid rgba(255, 215, 142, 0.14);
     box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.22);
@@ -700,8 +699,8 @@ button:active {
   }
 
   .mobile-joystick-thumb {
-    width: 52px;
-    height: 52px;
+    width: 44px;
+    height: 44px;
     background: rgba(255, 196, 112, 0.2);
     border: 1px solid rgba(255, 215, 142, 0.22);
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
@@ -709,8 +708,12 @@ button:active {
   }
 
   .mobile-actions {
+    position: absolute;
+    right: max(18px, env(safe-area-inset-right, 0px));
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
     display: flex;
-    gap: 14px;
+    flex-direction: column-reverse;
+    gap: 12px;
     align-items: center;
   }
 
@@ -738,10 +741,10 @@ button:active {
 
   .mobile-action {
     position: static;
-    width: 58px;
-    height: 58px;
+    width: 54px;
+    height: 54px;
     border-radius: 999px;
-    font-size: 1.2rem;
+    font-size: 1.12rem;
   }
 
   .mobile-action-dash {
@@ -801,22 +804,24 @@ button:active {
   }
 
   .mobile-controls {
-    padding-inline: 14px;
+    padding: 0;
   }
 
   .mobile-joystick {
-    width: 112px;
-    height: 112px;
+    left: max(14px, env(safe-area-inset-left, 0px));
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    width: 96px;
+    height: 96px;
   }
 
   .mobile-joystick-ring {
-    width: 112px;
-    height: 112px;
+    width: 96px;
+    height: 96px;
   }
 
   .mobile-joystick-thumb {
-    width: 46px;
-    height: 46px;
+    width: 40px;
+    height: 40px;
   }
 
   .mobile-key {
@@ -827,8 +832,8 @@ button:active {
   }
 
   .mobile-action {
-    width: 52px;
-    height: 52px;
+    width: 48px;
+    height: 48px;
   }
 
   .start-card h2 {
