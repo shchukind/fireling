@@ -1019,6 +1019,7 @@ function despawnWoodWithEffect(pickup, burstColor = 0xf0c07a, debrisColor = 0x8f
 
   spawnBurst(pickup.mesh.position, burstColor);
   spawnDebris(pickup.mesh.position, debrisColor, debrisCount);
+  pickup.active = false;
   pickup.despawning = true;
   pickup.despawnTimer = pickup.despawnDuration;
   pickup.life = 0;
@@ -1028,7 +1029,7 @@ function spawnWoodAt(position, count = 1) {
   let spawned = 0;
 
   woods.forEach((pickup) => {
-    if (spawned >= count || pickup.active) {
+    if (spawned >= count || pickup.active || pickup.despawning) {
       return;
     }
 
@@ -1054,9 +1055,9 @@ function forceSpawnWoodAt(position, count = 1) {
 
   while (spawned < count) {
     const pickup =
-      woods.find((item) => !item.active) ||
+      woods.find((item) => !item.active && !item.despawning) ||
       woods
-        .filter((item) => item.active)
+        .filter((item) => item.active && !item.despawning)
         .sort((left, right) => left.life - right.life)[0];
 
     if (!pickup) {
