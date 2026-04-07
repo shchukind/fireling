@@ -186,7 +186,7 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x1f3c5d);
 scene.fog = new THREE.FogExp2(0x22405f, 0.0072);
 
-const camera = new THREE.PerspectiveCamera(56, 1, 0.1, 180);
+const camera = new THREE.PerspectiveCamera(62, 1, 0.1, 180);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
@@ -1527,7 +1527,7 @@ function resetGame(startImmediately = false) {
   player.rotation.y = 0;
   moveDirection.set(0, 0, 1);
   cameraLookTarget.set(0, 1.4, 0);
-  camera.position.set(0, 6.9, -6.6);
+  camera.position.set(0, 7.6, -7.8);
   camera.lookAt(cameraLookTarget);
   previousPlayerXZ.set(0, 0, 0);
 
@@ -2173,9 +2173,9 @@ function updateCamera(deltaTime) {
   starField.position.set(player.position.x, 0, player.position.z);
   cameraLookTarget.lerp(new THREE.Vector3(player.position.x, 1.4 + player.position.y * 0.2, player.position.z), 1 - Math.exp(-deltaTime * 6));
   const desired = new THREE.Vector3(
-    player.position.x - moveDirection.x * 6.6,
-    6.9 + player.position.y * 0.35,
-    player.position.z - moveDirection.z * 6.6
+    player.position.x - moveDirection.x * 7.8,
+    7.6 + player.position.y * 0.35,
+    player.position.z - moveDirection.z * 7.8
   );
 
   camera.position.lerp(desired, 1 - Math.exp(-deltaTime * 4));
