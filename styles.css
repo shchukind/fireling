@@ -529,6 +529,43 @@ h1 {
   white-space: nowrap;
 }
 
+.pause-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(circle at center, rgba(8, 12, 18, 0.1), rgba(4, 6, 8, 0.42));
+}
+
+.pause-overlay.hidden {
+  display: none;
+}
+
+.pause-card {
+  min-width: 220px;
+  padding: 18px 20px;
+  border-radius: 22px;
+  text-align: center;
+  border: 1px solid rgba(255, 215, 142, 0.18);
+  background: rgba(7, 12, 18, 0.72);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(10px);
+}
+
+.pause-kicker {
+  color: rgba(248, 234, 210, 0.92);
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.pause-copy {
+  margin-top: 8px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
 .meter {
   overflow: hidden;
   height: 12px;
@@ -582,6 +619,10 @@ h2 {
 .panel p {
   color: var(--muted);
   line-height: 1.65;
+}
+
+.sidebar > section:first-child p {
+  white-space: nowrap;
 }
 
 kbd {

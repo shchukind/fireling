@@ -42,11 +42,22 @@ fullscreenHud.innerHTML = `
     <span class="hud-chip"><kbd>← ↑ ↓ →</kbd><span>движение</span></span>
     <span class="hud-chip"><kbd>Shift</kbd><span>рывок</span></span>
     <span class="hud-chip"><kbd>Space</kbd><span>прыжок</span></span>
+    <span class="hud-chip"><kbd>P</kbd><span>пауза</span></span>
     <span class="hud-chip"><kbd>R</kbd><span>заново</span></span>
     <span class="hud-chip"><kbd>Esc</kbd><span>выход</span></span>
   </div>
 `;
 viewportEl.appendChild(fullscreenHud);
+
+const pauseOverlay = document.createElement("div");
+pauseOverlay.className = "pause-overlay hidden";
+pauseOverlay.innerHTML = `
+  <div class="pause-card">
+    <p class="pause-kicker">Пауза</p>
+    <p class="pause-copy">Нажми <kbd>P</kbd>, чтобы продолжить.</p>
+  </div>
+`;
+viewportEl.appendChild(pauseOverlay);
 
 const worldRadius = 34;
 const woodCount = 11;
@@ -1053,6 +1064,7 @@ const state = {
   survival: 0,
   woodCollected: 0,
   gameOver: false,
+  paused: false,
   started: false,
   bestSurvival: Number.isFinite(storedBestSurvival) ? storedBestSurvival : 0,
   hasNewRecord: false,
@@ -1112,9 +1124,9 @@ function ensureAudio() {
   const windGain = context.createGain();
   const musicGain = context.createGain();
 
-  masterGain.gain.value = 0.62;
-  ambienceGain.gain.value = 0.44;
-  sfxGain.gain.value = 0.34;
+  masterGain.gain.value = 0.93;
+  ambienceGain.gain.value = 0.66;
+  sfxGain.gain.value = 0.51;
   fireGain.gain.value = 0;
   rainGain.gain.value = 0;
   windGain.gain.value = 0;
@@ -1475,6 +1487,7 @@ function resetGame(startImmediately = false) {
   state.survival = 0;
   state.woodCollected = 0;
   state.gameOver = false;
+  state.paused = false;
   state.started = false;
   state.hasNewRecord = false;
   state.speedBoost = 0;
@@ -1508,6 +1521,7 @@ function resetGame(startImmediately = false) {
   if (newRecordEl) {
     newRecordEl.classList.add("hidden");
   }
+  pauseOverlay.classList.add("hidden");
 
   player.position.set(0, 0, 0);
   player.rotation.y = 0;
@@ -1687,6 +1701,15 @@ function beginGame() {
     startScreenEl.classList.add("hidden");
   }
   updateUiStateClasses();
+}
+
+function togglePause() {
+  if (!state.started || state.gameOver) {
+    return;
+  }
+
+  state.paused = !state.paused;
+  pauseOverlay.classList.toggle("hidden", !state.paused);
 }
 
 function setVirtualKey(code, pressed) {
@@ -2234,6 +2257,12 @@ function updateGame(deltaTime, elapsedTime) {
     return;
   }
 
+  if (state.paused) {
+    updateHud();
+    updateAudio(0, elapsedTime);
+    return;
+  }
+
   updateRain(elapsedTime, deltaTime);
   updateWind(elapsedTime, deltaTime);
   updateFog(deltaTime);
@@ -2375,6 +2404,12 @@ window.addEventListener("beforeinstallprompt", (event) => {
 document.addEventListener("keydown", (event) => {
   if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(event.code)) {
     event.preventDefault();
+  }
+
+  if (event.code === "KeyP" && !event.repeat) {
+    event.preventDefault();
+    togglePause();
+    return;
   }
 
   if (!state.started && ["Enter", "Space"].includes(event.code)) {
