@@ -232,12 +232,12 @@ function createForestBandTexture() {
   canvas.height = 256;
   const ctx = canvas.getContext("2d");
 
-  ctx.fillStyle = "#16304b";
+  ctx.fillStyle = "#102135";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const skyGlow = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  skyGlow.addColorStop(0, "rgba(135, 170, 220, 0.2)");
-  skyGlow.addColorStop(0.45, "rgba(70, 105, 145, 0.08)");
+  skyGlow.addColorStop(0, "rgba(95, 125, 165, 0.14)");
+  skyGlow.addColorStop(0.45, "rgba(46, 68, 96, 0.05)");
   skyGlow.addColorStop(1, "rgba(10, 18, 24, 0)");
   ctx.fillStyle = skyGlow;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -253,10 +253,10 @@ function createForestBandTexture() {
     ctx.lineTo(x - width * 0.55, baseY);
     ctx.lineTo(x + width * 0.55, baseY);
     ctx.closePath();
-    ctx.fillStyle = i % 3 === 0 ? "#0d1718" : i % 3 === 1 ? "#132021" : "#1a2b28";
+    ctx.fillStyle = i % 3 === 0 ? "#091011" : i % 3 === 1 ? "#0d1617" : "#131f1d";
     ctx.fill();
 
-    ctx.fillStyle = "#221811";
+    ctx.fillStyle = "#17100c";
     ctx.fillRect(x - width * 0.06, baseY - 12, width * 0.12, 18);
   }
 
