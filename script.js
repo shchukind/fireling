@@ -1124,9 +1124,9 @@ function ensureAudio() {
   const windGain = context.createGain();
   const musicGain = context.createGain();
 
-  masterGain.gain.value = 0.93;
-  ambienceGain.gain.value = 0.66;
-  sfxGain.gain.value = 0.51;
+  masterGain.gain.value = 1.4;
+  ambienceGain.gain.value = 0.99;
+  sfxGain.gain.value = 0.76;
   fireGain.gain.value = 0;
   rainGain.gain.value = 0;
   windGain.gain.value = 0;

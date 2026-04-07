@@ -491,11 +491,11 @@ h1 {
 
 .fullscreen-hud-hint {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
-  gap: 10px;
-  max-width: min(92vw, 860px);
-  padding: 10px;
+  gap: 8px;
+  max-width: min(96vw, 980px);
+  padding: 8px;
   border-radius: 22px;
   background: rgba(6, 10, 16, 0.4);
   border: 1px solid rgba(255, 215, 142, 0.12);
@@ -505,21 +505,21 @@ h1 {
 .hud-chip {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
+  gap: 8px;
+  padding: 7px 10px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: rgba(248, 234, 210, 0.88);
-  font-size: 0.82rem;
+  font-size: 0.76rem;
   line-height: 1;
   white-space: nowrap;
 }
 
 .hud-chip kbd {
-  min-width: 64px;
+  min-width: 52px;
   text-align: center;
-  padding: 6px 10px;
+  padding: 5px 8px;
   background: rgba(255, 214, 142, 0.12);
   border-color: rgba(255, 214, 142, 0.18);
   color: #ffe8bf;
@@ -601,8 +601,7 @@ h1 {
 
 body.start-active .overlay,
 body.start-active .mobile-controls,
-body.start-active .fullscreen-hud,
-body.start-active .sidebar {
+body.start-active .fullscreen-hud {
   opacity: 0;
   pointer-events: none;
 }
