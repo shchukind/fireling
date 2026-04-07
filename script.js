@@ -1003,6 +1003,18 @@ function respawnWood(pickup, origin = player.position) {
   pickup.life = rand(18, 34);
 }
 
+function despawnWoodWithEffect(pickup, burstColor = 0xf0c07a, debrisColor = 0x8f6239, debrisCount = 6) {
+  if (!pickup.active) {
+    return;
+  }
+
+  spawnBurst(pickup.mesh.position, burstColor);
+  spawnDebris(pickup.mesh.position, debrisColor, debrisCount);
+  pickup.active = false;
+  pickup.life = 0;
+  pickup.mesh.visible = false;
+}
+
 function spawnWoodAt(position, count = 1) {
   let spawned = 0;
 
@@ -1040,6 +1052,10 @@ function forceSpawnWoodAt(position, count = 1) {
 
     if (!pickup) {
       break;
+    }
+
+    if (pickup.active) {
+      despawnWoodWithEffect(pickup, 0xd8b27b, 0x7c5431, 5);
     }
 
     const angle = Math.random() * Math.PI * 2;
@@ -1841,9 +1857,7 @@ function updateWoodLifecycle(deltaTime) {
 
     pickup.life -= deltaTime;
     if (pickup.life <= 0) {
-      pickup.active = false;
-      pickup.life = 0;
-      pickup.mesh.visible = false;
+      despawnWoodWithEffect(pickup, 0xd7b27f, 0x7c5431, 4);
     }
   });
 }
@@ -2346,9 +2360,7 @@ function updateGame(deltaTime, elapsedTime) {
   woods.forEach((pickup) => {
     if (pickup.active && pickup.mesh.position.distanceTo(player.position) < 1.8) {
       collectWood();
-      pickup.active = false;
-      pickup.life = 0;
-      pickup.mesh.visible = false;
+      despawnWoodWithEffect(pickup, 0xffcf86, 0xa26b3d, 6);
     }
   });
 
