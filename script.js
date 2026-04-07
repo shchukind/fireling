@@ -973,6 +973,9 @@ function createWoodPickup() {
     glow,
     bobOffset: Math.random() * Math.PI * 2,
     active: false,
+    despawning: false,
+    despawnTimer: 0,
+    despawnDuration: 0.18,
     life: 0,
   });
 }
@@ -998,21 +1001,27 @@ function respawnWood(pickup, origin = player.position) {
   pickup.mesh.position.copy(next);
   pickup.mesh.position.y = 0.8;
   pickup.mesh.rotation.y = Math.random() * Math.PI * 2;
+  pickup.mesh.rotation.x = 0;
+  pickup.mesh.rotation.z = 0;
+  pickup.mesh.scale.setScalar(1);
   pickup.mesh.visible = true;
   pickup.active = true;
+  pickup.despawning = false;
+  pickup.despawnTimer = 0;
   pickup.life = rand(18, 34);
+  pickup.glow.material.opacity = 0.5;
 }
 
 function despawnWoodWithEffect(pickup, burstColor = 0xf0c07a, debrisColor = 0x8f6239, debrisCount = 6) {
-  if (!pickup.active) {
+  if (!pickup.active || pickup.despawning) {
     return;
   }
 
   spawnBurst(pickup.mesh.position, burstColor);
   spawnDebris(pickup.mesh.position, debrisColor, debrisCount);
-  pickup.active = false;
+  pickup.despawning = true;
+  pickup.despawnTimer = pickup.despawnDuration;
   pickup.life = 0;
-  pickup.mesh.visible = false;
 }
 
 function spawnWoodAt(position, count = 1) {
@@ -1549,8 +1558,14 @@ function resetGame(startImmediately = false) {
 
   woods.forEach((pickup) => {
     pickup.active = false;
+    pickup.despawning = false;
+    pickup.despawnTimer = 0;
     pickup.life = 0;
     pickup.mesh.visible = false;
+    pickup.mesh.scale.setScalar(1);
+    pickup.mesh.rotation.x = 0;
+    pickup.mesh.rotation.z = 0;
+    pickup.glow.material.opacity = 0.5;
   });
   puddles.forEach((puddle) => {
     puddle.active = false;
@@ -1838,19 +1853,47 @@ function animatePlayer(elapsedTime) {
 
 function updateWoods(elapsedTime) {
   woods.forEach((pickup, index) => {
+    if (pickup.despawning) {
+      const progress = 1 - pickup.despawnTimer / pickup.despawnDuration;
+      const scale = Math.max(0.001, 1 - progress * 0.85);
+      pickup.mesh.visible = true;
+      pickup.mesh.scale.setScalar(scale);
+      pickup.mesh.position.y = 0.78 - progress * 0.22;
+      pickup.mesh.rotation.y += 0.08 + index * 0.0003;
+      pickup.mesh.rotation.z = progress * 0.5;
+      pickup.glow.material.opacity = Math.max(0, 0.24 * (1 - progress));
+      return;
+    }
+
     if (!pickup.active) {
       pickup.mesh.visible = false;
       return;
     }
 
+    pickup.mesh.scale.setScalar(1);
     pickup.mesh.position.y = 0.78 + Math.sin(elapsedTime * 2.4 + pickup.bobOffset) * 0.22;
     pickup.mesh.rotation.y += 0.01 + index * 0.0002;
+    pickup.mesh.rotation.z = 0;
     pickup.glow.material.opacity = 0.32 + Math.sin(elapsedTime * 3.2 + pickup.bobOffset) * 0.18;
   });
 }
 
 function updateWoodLifecycle(deltaTime) {
   woods.forEach((pickup) => {
+    if (pickup.despawning) {
+      pickup.despawnTimer -= deltaTime;
+      if (pickup.despawnTimer <= 0) {
+        pickup.despawning = false;
+        pickup.active = false;
+        pickup.mesh.visible = false;
+        pickup.mesh.scale.setScalar(1);
+        pickup.mesh.rotation.x = 0;
+        pickup.mesh.rotation.z = 0;
+        pickup.glow.material.opacity = 0.5;
+      }
+      return;
+    }
+
     if (!pickup.active) {
       return;
     }
