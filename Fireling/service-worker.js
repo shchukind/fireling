@@ -1,4 +1,4 @@
-const CACHE_NAME = "fireling-v2";
+const CACHE_NAME = "fireling-v3";
 const CORE_ASSETS = [
   "./",
   "./index.html",
